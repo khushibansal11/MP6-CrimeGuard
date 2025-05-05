@@ -1,0 +1,119 @@
+/* Base styles for header */
+.header {
+  background: #f8f9fc;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+.header > .container{
+  display: flex;
+    justify-content: space-between;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #ff007f;
+}
+
+.nav {
+  display: flex;
+  gap: 20px;
+}
+
+.nav a {
+  text-decoration: none;
+  font-size: 1rem;
+  color: #333;
+  transition: color 0.3s;
+}
+
+.nav a:hover {
+  color: #ff007f;
+}
+
+/* Header buttons */
+.header-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.header-buttons .login-btn,
+.header-buttons .signup-btn {
+  background: none;
+  border: 1px solid #ff007f;
+  color: #ff007f;
+  padding: 5px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.header-buttons .signup-btn {
+  background: #ff007f;
+  color: #fff;
+}
+
+.header-buttons button:hover {
+  opacity: 0.9;
+}
+
+/* Responsive dropdown styles */
+.menu-toggle {
+  display: none; /* Hidden by default */
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+}
+
+.menu-toggle .bar {
+  width: 25px;
+  height: 3px;
+  background: #333;
+  border-radius: 3px;
+}
+
+/* Dropdown menu styles */
+
+
+/* Hide nav links and buttons for smaller screens */
+@media (max-width: 770px) {
+  .nav {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+
+  .menu-toggle {
+    display: flex;
+  }
+
+  .header-buttons {
+    display: none;
+  }
+  .nav.open {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    width: 100%;
+    background:#f8f9fc;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    transition: max-height 0.11s ease-in-out, opacity 0.3s ease-in-out;
+    
+  }
+  
+  .nav.open a {
+    padding: 8px 20px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .nav.open a:last-child {
+    border-bottom: none;
+  }
+}

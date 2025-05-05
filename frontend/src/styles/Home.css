@@ -1,0 +1,36 @@
+.home {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 50px;
+    text-align: center;
+    background-color: #f9fafb;
+    color: #374151;
+  }
+  
+  .home h1 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+  }
+  
+  .home p {
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+  }
+  
+  .cta-button {
+    background-color: #16a34a;
+    color: #ffffff;
+    padding: 12px 25px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .cta-button:hover {
+    background-color: #15803d;
+  }
+  
