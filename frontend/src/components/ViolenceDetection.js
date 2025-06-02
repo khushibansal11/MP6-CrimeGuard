@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "../styles/ViolenceDetection.css";
+import { BACKEND_URL } from '../config';  
 
 const ViolenceDetection = () => {
   const [filename, setFilename] = useState(null);
@@ -11,7 +12,7 @@ const ViolenceDetection = () => {
     event.preventDefault();
     const formData = new FormData(event.target);
     try {
-      const response = await fetch("http://127.0.0.1:5000/api/upload_vedio", {
+      const response = await fetch(`${BACKEND_URL}/api/upload_vedio`, {
         method: "POST",
         body: formData,
       });
@@ -27,7 +28,7 @@ const ViolenceDetection = () => {
   const handlePreview = () => {
     if (filename) {
       const previewVideo = document.getElementById("preview-video");
-      previewVideo.src = `http://127.0.0.1:5000/static/${filename}`;
+      previewVideo.src = `${BACKEND_URL}/static/${filename}`;
     } else {
       alert("No file uploaded to preview.");
     }
@@ -40,7 +41,7 @@ const ViolenceDetection = () => {
     setIsVideoPlaying(true); // Set video to be playing
     
     try {
-      await fetch("http://127.0.0.1:5000/api/start_processing", {
+      await fetch(`${BACKEND_URL}/api/start_processing`, {
         method: "POST",
         body: JSON.stringify({ filename }),
         headers: {
@@ -49,7 +50,7 @@ const ViolenceDetection = () => {
       });
 
       const processedVideo = document.getElementById("processed-video");
-      processedVideo.src = `http://127.0.0.1:5000/api/processed_video_feed/${filename}`;
+      processedVideo.src = `${BACKEND_URL}/api/processed_video_feed/${filename}`;
     } catch (error) {
       console.error("Error processing video:", error);
       alert("Failed to process video. Please try again.");
@@ -73,7 +74,7 @@ const ViolenceDetection = () => {
     } else {
       // Start the camera feed
       setIsCameraOn(true);
-      await fetch("http://127.0.0.1:5000/api/start_processing", {
+      await fetch(`${BACKEND_URL}/api/start_processing`, {
         method: "POST",
         body: JSON.stringify({ filename: "camera" }),
         headers: {
@@ -81,7 +82,7 @@ const ViolenceDetection = () => {
         },
       });
       const processedVideo = document.getElementById("processed-video");
-      processedVideo.src = "http://127.0.0.1:5000/api/camera_feed";
+      processedVideo.src = `${BACKEND_URL}/api/camera_feed`;
     }
   };
 
