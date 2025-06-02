@@ -380,8 +380,19 @@ def send_email(subject, body, attachment=None):
     except Exception as e:
         logging.error(f'Error sending email: {str(e)}')
 
+def download_model():
+    model_url = 'https://github.com/khushibansal11/MP6-CrimeGuard/releases/download/v1.0/vgg16_model.h5'
+    model_path = 'model/vgg16_model.h5'
+
+    if not os.path.exists(model_path):
+        os.makedirs('model', exist_ok=True)
+        response = requests.get(model_url)
+        with open(model_path, 'wb') as f:
+            f.write(response.content)
 
 def generate_frames(video_path):
+    # model = load_model('model/vgg16_model.h5', compile=False)
+    download_model()
     model = load_model('model/vgg16_model.h5', compile=False)
 
     image_height, image_width = 96, 96  # 128,128
