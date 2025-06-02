@@ -390,21 +390,23 @@ def download_model():
         with open(model_path, 'wb') as f:
             f.write(response.content)
 
-def generate_frames(video_path):
-    # model = load_model('model/vgg16_model.h5', compile=False)
+def generate_processed_video(input_path, output_path):
     download_model()
     model = load_model('model/vgg16_model.h5', compile=False)
 
-    image_height, image_width = 96, 96  # 128,128
+    image_height, image_width = 96, 96
     sequence_length = 16
     class_list = ["Violence", "NonViolence"]
 
-    video_reader = cv2.VideoCapture(video_path)
+    video_reader = cv2.VideoCapture(input_path)
     fps = video_reader.get(cv2.CAP_PROP_FPS)
-    print(f'The video has {fps} frames per second.')
+    width = int(video_reader.get(cv2.CAP_PROP_FRAME_WIDTH))
+    height = int(video_reader.get(cv2.CAP_PROP_FRAME_HEIGHT))
+
+    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+    out = cv2.VideoWriter(output_path, fourcc, fps, (width, height))
 
     frames_queue = deque(maxlen=sequence_length)
-
     predicted_class_name = ''
     predicted_confidence = 0
     alart_count = 0
@@ -416,44 +418,99 @@ def generate_frames(video_path):
             break
 
         resized_frame = cv2.resize(frame, (image_height, image_width))
-
         normalized_frame = resized_frame / 255
-
         frames_queue.append(normalized_frame)
 
         if len(frames_queue) == sequence_length:
-            # input_data = np.expand_dims(frames_queue, axis=0)
-            # predicted_labels_probabilities = model.predict([input_data, input_data])[0]  # provide the input twice
             predicted_labels_probabilities = model.predict(np.expand_dims(frames_queue, axis=0))[0]
-
             predicted_label = np.argmax(predicted_labels_probabilities)
-
             predicted_class_name = class_list[predicted_label]
             predicted_confidence = predicted_labels_probabilities[predicted_label]
 
         text = f'{predicted_class_name}: {predicted_confidence:.2f}'
-
-        # Calculate the text size based on the video's height
-        text_size = frame.shape[0] / 4  # Adjust the denominator to get the desired text size
+        text_size = frame.shape[0] / 4
 
         if predicted_class_name == "Violence":
             cv2.putText(frame, text, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, text_size / 100, (0, 0, 255), 2)
             email_subject = 'Violence Detected!!!'
             email_body = '<p>We have detected violence in the video, please check.</p>'
             alart_count += 1
-            if alart_count >= 10 and mail_sent == False:
+            if alart_count >= 10 and not mail_sent:
                 send_email(email_subject, email_body, frame)
                 mail_sent = True
         else:
             cv2.putText(frame, text, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, text_size / 100, (0, 255, 0), 2)
 
-        ret, jpeg = cv2.imencode('.jpg', frame)
-        frame = jpeg.tobytes()
-        yield (b'--frame\r\n'
-               b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
+        out.write(frame)
 
     video_reader.release()
-    cv2.destroyAllWindows()        
+    out.release()
+    cv2.destroyAllWindows()
+
+# def generate_frames(video_path):
+#     # model = load_model('model/vgg16_model.h5', compile=False)
+#     download_model()
+#     model = load_model('model/vgg16_model.h5', compile=False)
+
+#     image_height, image_width = 96, 96  # 128,128
+#     sequence_length = 16
+#     class_list = ["Violence", "NonViolence"]
+
+#     video_reader = cv2.VideoCapture(video_path)
+#     fps = video_reader.get(cv2.CAP_PROP_FPS)
+#     print(f'The video has {fps} frames per second.')
+
+#     frames_queue = deque(maxlen=sequence_length)
+
+#     predicted_class_name = ''
+#     predicted_confidence = 0
+#     alart_count = 0
+#     mail_sent = False
+
+#     while video_reader.isOpened():
+#         ok, frame = video_reader.read()
+#         if not ok:
+#             break
+
+#         resized_frame = cv2.resize(frame, (image_height, image_width))
+
+#         normalized_frame = resized_frame / 255
+
+#         frames_queue.append(normalized_frame)
+
+#         if len(frames_queue) == sequence_length:
+#             # input_data = np.expand_dims(frames_queue, axis=0)
+#             # predicted_labels_probabilities = model.predict([input_data, input_data])[0]  # provide the input twice
+#             predicted_labels_probabilities = model.predict(np.expand_dims(frames_queue, axis=0))[0]
+
+#             predicted_label = np.argmax(predicted_labels_probabilities)
+
+#             predicted_class_name = class_list[predicted_label]
+#             predicted_confidence = predicted_labels_probabilities[predicted_label]
+
+#         text = f'{predicted_class_name}: {predicted_confidence:.2f}'
+
+#         # Calculate the text size based on the video's height
+#         text_size = frame.shape[0] / 4  # Adjust the denominator to get the desired text size
+
+#         if predicted_class_name == "Violence":
+#             cv2.putText(frame, text, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, text_size / 100, (0, 0, 255), 2)
+#             email_subject = 'Violence Detected!!!'
+#             email_body = '<p>We have detected violence in the video, please check.</p>'
+#             alart_count += 1
+#             if alart_count >= 10 and mail_sent == False:
+#                 send_email(email_subject, email_body, frame)
+#                 mail_sent = True
+#         else:
+#             cv2.putText(frame, text, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, text_size / 100, (0, 255, 0), 2)
+
+#         ret, jpeg = cv2.imencode('.jpg', frame)
+#         frame = jpeg.tobytes()
+#         yield (b'--frame\r\n'
+#                b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
+
+#     video_reader.release()
+#     cv2.destroyAllWindows()        
 
 
 
