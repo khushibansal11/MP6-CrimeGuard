@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import InputForm from '../components/InputForm';
 import '../styles/analysis-pages.css';
+import { BACKEND_URL } from '../config';
 
 const CrimeMap = () => {
   const [mapUrl, setMapUrl] = useState('');
 
   const handleInputSubmit = (inputs) => {
     const { year, crime_type } = inputs;
-    const url = `http://127.0.0.1:5000/api/crime-map?year=${year}&crime_type=${encodeURIComponent(crime_type)}`;
+    const url = `${BACKEND_URL}/api/crime-map?year=${year}&crime_type=${encodeURIComponent(crime_type)}`;
     setMapUrl(url);
   };
 
