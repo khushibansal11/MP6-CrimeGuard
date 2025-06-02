@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import InputForm from '../components/InputForm';
 import '../styles/analysis-pages.css';
+import { BACKEND_URL } from '../config';
 
 const QueryAnalysis = () => {
   const [results, setResults] = useState([]);
@@ -8,7 +9,7 @@ const QueryAnalysis = () => {
   const handleInputSubmit = async (inputs) => {
     try {
       const response = await fetch(
-        `http://127.0.0.1:5000/api/query_analysis?year=${inputs.year}&state=${inputs.state}`
+        `${BACKEND_URL}/api/query_analysis?year=${inputs.year}&state=${inputs.state}`
       );
       if (response.ok) {
         const data = await response.json();
