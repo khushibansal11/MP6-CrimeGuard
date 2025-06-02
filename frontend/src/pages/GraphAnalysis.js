@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import InputForm from '../components/InputForm';
 import "../styles/analysis-pages.css"
+import { BACKEND_URL } from '../config';
 
 const GraphAnalysis = () => {
   const [imageUrl, setImageUrl] = useState(null);
@@ -8,7 +9,7 @@ const GraphAnalysis = () => {
   const handleInputSubmit = async (inputs) => {
     try {
       const response = await fetch(
-        `http://127.0.0.1:5000/api/graph_analysis?year=${inputs.year}&crime_type=${inputs.crime_type}`
+        `${BACKEND_URL}/api/graph_analysis?year=${inputs.year}&crime_type=${inputs.crime_type}`
       );
       if (response.ok) {
         const imageBlob = await response.blob();
