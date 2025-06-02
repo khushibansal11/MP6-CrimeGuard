@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import InputForm from '../components/InputForm';
 import '../styles/analysis-pages.css';
+import { BACKEND_URL } from '../config';
 
 const PredictiveAnalysis = () => {
   const [results, setResults] = useState(null);
@@ -8,7 +9,7 @@ const PredictiveAnalysis = () => {
   const handleInputSubmit = async (inputs) => {
     try {
       const response = await fetch(
-        `http://127.0.0.1:5000/api/predictive_analysis?state=${inputs.state}&year=${inputs.year}`
+        `${BACKEND_URL}/api/predictive_analysis?state=${inputs.state}&year=${inputs.year}`
       );
       if (response.ok) {
         const data = await response.json();
