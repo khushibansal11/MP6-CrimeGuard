@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../styles/InputForm.css';
+import { BACKEND_URL } from '../config';  
 
 const InputForm = ({ fields, onSubmit }) => {
   const [inputs, setInputs] = useState(
@@ -49,7 +50,7 @@ const InputForm = ({ fields, onSubmit }) => {
 
   useEffect(() => {
     if (fields.some(field => field.toLowerCase() === 'state')) {
-      axios.get('http://localhost:5000/api/states')
+      axios.get('${BACKEND_URL}/api/states')
         .then(res => setStates(res.data))
         .catch(err => console.error('Failed to load states:', err));
     }
