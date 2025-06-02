@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import InputForm from '../components/InputForm';
 import '../styles/analysis-pages.css';
+import { BACKEND_URL } from '../config';
 
 const CrimeStats = () => {
   const [chartUrl, setChartUrl] = useState('');
 
   const handleInputSubmit = (inputs) => {
     const { state, year } = inputs;
-    const url = `http://127.0.0.1:5000/api/crime-stats?state=${encodeURIComponent(state)}&year=${encodeURIComponent(year)}`;
+    const url = `${BACKEND_URL}/api/crime-stats?state=${encodeURIComponent(state)}&year=${encodeURIComponent(year)}`;
     setChartUrl(url);
   };
 
