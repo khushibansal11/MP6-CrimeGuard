@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import InputForm from '../components/InputForm';
 import '../styles/analysis-pages.css';
 import { BACKEND_URL } from '../config';
 
