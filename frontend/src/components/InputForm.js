@@ -50,7 +50,7 @@ const InputForm = ({ fields, onSubmit }) => {
 
   useEffect(() => {
     if (fields.some(field => field.toLowerCase() === 'state')) {
-      axios.get('${BACKEND_URL}/api/states')
+      axios.get(`${BACKEND_URL}/api/states`)
         .then(res => setStates(res.data))
         .catch(err => console.error('Failed to load states:', err));
     }
