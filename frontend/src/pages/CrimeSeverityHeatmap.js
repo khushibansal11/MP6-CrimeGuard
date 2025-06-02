@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import InputForm from '../components/InputForm';
 import '../styles/analysis-pages.css';
+import { BACKEND_URL } from '../config';
 
 const CrimeSeverityHeatmap = () => {
   const [heatmapUrl, setHeatmapUrl] = useState('');
 
   const handleInputSubmit = () => {
-    const url = `http://127.0.0.1:5000/api/crime-severity-heatmap`;
+    const url = `${BACKEND_URL}/api/crime-severity-heatmap`;
     setHeatmapUrl(url);
   };
 
