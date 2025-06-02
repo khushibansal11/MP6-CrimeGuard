@@ -380,6 +380,33 @@ def send_email(subject, body, attachment=None):
     except Exception as e:
         logging.error(f'Error sending email: {str(e)}')
 
+@app.route('/api/processed_video_feed/<filename>', methods=['GET'])
+def download_processed_video(filename):
+    processed_video_path = os.path.join('processed_videos', filename)
+
+    if os.path.exists(processed_video_path):
+        return send_file(processed_video_path, as_attachment=False)
+    else:
+        return jsonify({'message': 'Processed video not found'}), 404
+
+
+@app.route('/api/process_video/<filename>', methods=['GET'])
+def process_video(filename):
+    input_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+    output_path = os.path.join('processed_videos', filename)
+
+    if not os.path.exists(input_path):
+        return jsonify({'message': 'Input video not found'}), 404
+
+    os.makedirs('processed_videos', exist_ok=True)
+
+    try:
+        generate_processed_video(input_path, output_path)
+        video_url = f"{request.host_url}api/processed_video_feed/{filename}"
+        return jsonify({'message': 'Processing complete', 'processed_video_url': video_url})
+    except Exception as e:
+        return jsonify({'message': 'Processing failed', 'error': str(e)}), 500
+
 def download_model():
     model_url = 'https://github.com/khushibansal11/MP6-CrimeGuard/releases/download/v1.0/vgg16_model.h5'
     model_path = 'model/vgg16_model.h5'
