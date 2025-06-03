@@ -2,6 +2,8 @@
 
 **CrimeGuard** is a comprehensive system for real-time violence detection and crime rate prediction. It utilizes advanced machine learning algorithms to detect violence in live video feeds and predicts future crime trends based on historical data. The system aims to enhance public safety by providing predictive crime analytics and real-time monitoring of violent events.
 
+Live demo: https://crime-guard.netlify.app/
+
 ## Features
 
 * **Real-Time Violence Detection**: The system processes live video feeds to detect violent incidents using deep learning models.
